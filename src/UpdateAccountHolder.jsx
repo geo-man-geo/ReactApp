@@ -1,35 +1,36 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
-class UpdateAccountHolder extends Component {
-  state = {
-    accountHolder: {},
-  };
+const UpdateAccountHoldercomp = () => {
+  const { accountId } = useParams();
+  const [accountHolder, setAccountHolder] = useState({});
 
-  componentDidMount() {
-    const { match } = this.props;
-    const { accountId } = match.params;
-    this.fetchAccountHolder(accountId);
-  }
+  useEffect(() => {
+    fetchAccountHolder(accountId);
+  }, [accountId]);
 
-  fetchAccountHolder = (accountId) => {
+  const fetchAccountHolder = (accountId) => {
     axios
-      .get(`http://localhost:3001/holders/${accountId}`)
+      .get(`http://localhost:3001/account-holder/${accountId}`)
       .then((response) => {
-        this.setState({ accountHolder: response.data });
+        setAccountHolder(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  updateAccountHolder = (e) => {
+  const updateAccountHolder = (e) => {
     e.preventDefault(); // Prevent the form from submitting
 
-    const { accountHolder } = this.state;
-
     axios
-      .put("http://localhost:3001/holders", accountHolder)
+      .put(`http://localhost:3001/account-holder`, {
+        accountHolderName: accountHolder.accountHolderName,
+        nomineeName: accountHolder.nomineeName,
+        bankAccountType: accountHolder.bankAccountType,
+        accountId: accountId,
+      })
       .then((response) => {
         // Handle successful update
         console.log("Account holder updated:", response.data);
@@ -40,78 +41,83 @@ class UpdateAccountHolder extends Component {
       });
   };
 
-  render() {
-    const { accountHolder } = this.state;
-
-    return (
-      <div>
-        <h2>Update Account Holder</h2>
-        <form onSubmit={this.updateAccountHolder}>
-          <div>
-            <label>Account Holder Name</label>
-            <input
-              type="text"
-              value={accountHolder.accountHolderName || ""}
-              onChange={(e) =>
-                this.setState({
-                  accountHolder: {
-                    ...accountHolder,
+  return (
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh", marginTop: "-20vh" }}
+    >
+      <div className="col-lg-9">
+        <h2 className="m-1 p-2 text-center">Update Account Holder Details</h2>
+        <div className="p-1">
+          <form onSubmit={updateAccountHolder}>
+            <div className="form-group form-row justify-content-center">
+              <input
+                type="text"
+                className="form-control col-lg-4  placeholder-transparent text-center"
+                value={accountHolder.accountHolderName || ""}
+                onChange={(e) =>
+                  setAccountHolder((prevAccountHolder) => ({
+                    ...prevAccountHolder,
                     accountHolderName: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div>
-            <label>Nominee Name</label>
-            <input
-              type="text"
-              value={accountHolder.nomineeName || ""}
-              onChange={(e) =>
-                this.setState({
-                  accountHolder: {
-                    ...accountHolder,
+                  }))
+                }
+              />
+            </div>
+            <div className="form-group form-row justify-content-center">
+              <input
+                type="text"
+                className="form-control col-lg-4  placeholder-transparent text-center"
+                value={accountHolder.nomineeName || ""}
+                onChange={(e) =>
+                  setAccountHolder((prevAccountHolder) => ({
+                    ...prevAccountHolder,
                     nomineeName: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div>
-            <label>Account ID</label>
-            <input
-              type="text"
-              value={accountHolder.accountId || ""}
-              onChange={(e) =>
-                this.setState({
-                  accountHolder: {
-                    ...accountHolder,
+                  }))
+                }
+              />
+            </div>
+            <div className="form-group form-row justify-content-center">
+              <input
+                type="text"
+                className="form-control col-lg-4  placeholder-transparent text-center"
+                placeholder={accountId}
+                value={accountHolder.accountId || ""}
+                onChange={(e) =>
+                  setAccountHolder((prevAccountHolder) => ({
+                    ...prevAccountHolder,
                     accountId: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div>
-            <label>Bank Account Type</label>
-            <input
-              type="text"
-              value={accountHolder.bankAccountType || ""}
-              onChange={(e) =>
-                this.setState({
-                  accountHolder: {
-                    ...accountHolder,
+                  }))
+                }
+              />
+            </div>
+            <div className="form-group form-row justify-content-center">
+              <input
+                type="text"
+                className="form-control col-lg-4  placeholder-transparent text-center"
+                value={accountHolder.bankAccountType || ""}
+                onChange={(e) =>
+                  setAccountHolder((prevAccountHolder) => ({
+                    ...prevAccountHolder,
                     bankAccountType: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <button type="submit">Update</button>
-        </form>
+                  }))
+                }
+              />
+            </div>
+            <div className="form-group form-row justify-content-center">
+              <Link to="/maincontent">
+                <button
+                  type="submit"
+                  className="btn btn-primary m-1 align-items-center"
+                >
+                  Update
+                </button>
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default UpdateAccountHolder;
+export default UpdateAccountHoldercomp;
