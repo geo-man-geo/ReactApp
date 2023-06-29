@@ -17,8 +17,8 @@
     "name": "typicode"
   },
   "register": {
-    "email": "sd",
-    "password": "dasd"
+    "email": "jnnjn",
+    "password": "drctc"
   },
   "holders": [
     {
@@ -33,9 +33,15 @@
     "password": "sdf"
   },
   "add-account-holder": {
-    "accountHolderName": "fsdf",
-    "nomineeName": "sdf",
-    "bankAccountType": "Loan account",
-    "accountId": "sdfasd"
+    "accountHolderName": "hiuh",
+    "nomineeName": "iiuh",
+    "bankAccountType": "Overdraft account",
+    "accountId": "iiuhi"
+  },
+  "account-holder": {
+    "accountHolderName": "sdf",
+    "nomineeName": "sdfsd",
+    "bankAccountType": "sdf",
+    "accountId": "A123456"
   }
 }

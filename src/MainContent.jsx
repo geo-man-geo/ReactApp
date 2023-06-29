@@ -25,8 +25,24 @@ class MainContent extends Component {
   };
 
   handleDelete = (id) => {
-    // Handle delete logic here
-    console.log("Delete holder with id", id);
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this account holder?"
+    );
+
+    if (confirmDelete) {
+      axios
+        .delete(`http://localhost:3001/account-holder/${id}`)
+        .then(() => {
+          console.log(`Deleted holder with id ${id}`);
+          // After deletion, fetch the updated account holders
+          this.fetchAccountHolders();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("Deletion canceled by user");
+    }
   };
 
   renderHolderRows = (holders) => {
@@ -46,7 +62,7 @@ class MainContent extends Component {
           <span>
             <button
               className="btn btn-danger"
-              onClick={() => this.handleDelete(holder.id)}
+              onClick={() => this.handleDelete(holder.accountId)}
             >
               Delete
             </button>

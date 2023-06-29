@@ -118,7 +118,6 @@ class AddAccountHolder extends Component {
                   </button>
                 </Link>
               </div>
-
               <div className="text-center">{this.state.message}</div>
             </div>
           </div>
