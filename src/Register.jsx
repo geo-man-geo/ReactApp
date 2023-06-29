@@ -1,12 +1,32 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-class Login extends Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = { email: "", password: "", message: "" };
   }
+
+  handleRegister = () => {
+    const { email, password } = this.state;
+
+    // Make the POST request to register API
+    axios
+      .post("http://localhost:3001/register", {
+        email,
+        password,
+      })
+      .then((response) => {
+        console.log("Registration successful");
+        // Do something with the response if needed
+        // You can update the state or navigate to another page
+      })
+      .catch((error) => {
+        console.log("Registration failed", error);
+      });
+  };
 
   render() {
     return (
@@ -44,7 +64,7 @@ class Login extends Component {
             <div className="form-group form-row justify-content-center">
               <button
                 className="btn btn-primary m-1 align-items-center"
-                onClick={this.onLoginClick}
+                onClick={this.handleRegister}
               >
                 Register
               </button>
@@ -53,10 +73,7 @@ class Login extends Component {
             <div className="form-group form-row justify-content-center align-items-center">
               <h6 className="mr-2">Already a user?</h6>
               <Link to="/login">
-                <button
-                  className="btn btn-primary m-1 align-items-center"
-                  onClick={this.onLoginClick}
-                >
+                <button className="btn btn-primary m-1 align-items-center">
                   Login
                 </button>
               </Link>
@@ -66,22 +83,6 @@ class Login extends Component {
       </React.Fragment>
     );
   }
-
-  onLoginClick = () => {
-    console.log(this.state);
-    if (
-      this.state.email === "sample@sample.com" &&
-      this.state.password === "sample"
-    ) {
-      this.setState({
-        message: <span className="text-success">Successfully Logged in</span>,
-      });
-    } else {
-      this.setState({
-        message: <span className="text-danger">Incorrect credentials </span>,
-      });
-    }
-  };
 }
 
-export default Login;
+export default Register;

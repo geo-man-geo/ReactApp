@@ -1,103 +1,92 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 class MainContent extends Component {
   state = {
-    pageTitle: "Employees",
-    employeeCount: 5,
-    employees: [
-      {
-        id: 1,
-        Name: "Michael Scott",
-        Phone: "89-00",
-        address: { city: "Scranton PA" },
-        photo: "https:picsum.photos/id/1010/60",
-      },
-      {
-        id: 2,
-        Name: "Carrie Mathison",
-        Phone: null,
-        address: { city: "Brooklyn " },
-        photo: "https:picsum.photos/id/1018/60",
-      },
-      {
-        id: 3,
-        Name: "Penny Hofstader",
-        Phone: "99-33",
-        address: { city: "Nebraska" },
-        photo: "https:picsum.photos/id/1010/60",
-      },
-      {
-        id: 4,
-        Name: "Dwight Schrute",
-        Phone: "12-02",
-        address: { city: "Scranton PA" },
-        photo: "https:picsum.photos/id/1010/60",
-      },
-      {
-        id: 5,
-        Name: "Sheldon Cooper",
-        Phone: "43-90",
-        address: { city: "Texas" },
-        photo: "https:picsum.photos/id/1010/60",
-      },
-    ],
+    pageTitle: "Account Holders",
+    holders: [],
   };
+
+  componentDidMount() {
+    this.fetchAccountHolders();
+  }
+
+  fetchAccountHolders = () => {
+    axios
+      .get("http://localhost:3001/holders") // Replace with your API endpoint
+      .then((response) => {
+        this.setState({ holders: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  handleDelete = (id) => {
+    // Handle delete logic here
+    console.log("Delete holder with id", id);
+  };
+
+  renderHolderRows = (holders) => {
+    return holders.map((holder, index) => (
+      <tr key={index}>
+        <td>{index + 1}</td>
+        <td>{holder.accountHolderName}</td>
+        <td>{holder.nomineeName}</td>
+        <td>{holder.accountId}</td>
+        <td>{holder.bankAccountType}</td>
+        <td>
+          <span className="mr-2">
+            <Link to={`/update-account-holder/${holder.accountId}`}>
+              <button className="btn btn-primary">Edit</button>
+            </Link>
+          </span>
+          <span>
+            <button
+              className="btn btn-danger"
+              onClick={() => this.handleDelete(holder.id)}
+            >
+              Delete
+            </button>
+          </span>
+        </td>
+      </tr>
+    ));
+  };
+
   render() {
+    const { holders } = this.state;
+
     return (
-      <React.Fragment>
-        <h4>{this.state.pageTitle}</h4>
+      <div className="container">
+        <div className="row mb-4">
+          <div className="col">
+            <h4 className="text-center">{this.state.pageTitle}</h4>
+          </div>
+          <div className="col-auto mt-2">
+            <Link to="/add-account-holder">
+              <button className="btn btn-primary">Add Account Holders</button>
+            </Link>
+          </div>
+        </div>
         <table className="table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Employee Name</th>
-              <th>Phone number</th>
+              <th>Account Holder Name</th>
+              <th>Nominee Name</th>
+              <th>Account ID</th>
+              <th>Account Type</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody>{this.getCustomerDetails(this.state.employees)}</tbody>
+          <tbody>{this.renderHolderRows(holders)}</tbody>
         </table>
-
-        <span className="badge badge-secondary m-2">
-          {this.state.employeeCount}
-        </span>
-        <button className="btn btn-info" onClick={this.onRefreshClick}>
-          Refresh
-        </button>
-      </React.Fragment>
+      </div>
     );
   }
-
-  //Executes when the user clicks the refresh button
-  onRefreshClick = () => {
-    this.setState({
-      employeeCount: this.state.employeeCount + 1,
-    });
-  };
-
-  getPhoneToRender = (Phone) => {
-    return Phone ? (
-      Phone
-    ) : (
-      <div className="bg-warning p-1 text-center">N/A</div>
-    );
-  };
-
-  getCustomerDetails = (employees) => {
-    return this.state.employees.map((emp) => {
-      return (
-        <tr key={emp.id}>
-          <td>{emp.id}</td>
-          <td>
-            <img src={emp.photo} alt="Employee" />
-          </td>
-          <td>{emp.Name}</td>
-          <td>{this.getPhoneToRender(emp.Phone)}</td>
-          <td>{emp.address.city}</td>
-        </tr>
-      );
-    });
-  };
 }
 
 export default MainContent;
